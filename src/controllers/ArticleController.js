@@ -3,7 +3,7 @@ import { prisma } from "../utils/prismaClient.js";
 /**
  * create articles
  * @auth required
- * @route {POST} /article/create
+ * @route {POST} /api/v1/article/create
  * @returns created article
  */
 export const createArticle = async (req, res) => {
@@ -26,7 +26,7 @@ export const createArticle = async (req, res) => {
 /**
  * get single
  * @auth required
- * @route {GET} /article/
+ * @route {GET} /api/v1/article/:id
  * @returns requested  article
  */
 export const getArticle = async (req, res) => {
@@ -48,8 +48,8 @@ export const getArticle = async (req, res) => {
 /**
  * delete single
  * @auth required
- * @route {DELETE} /article/delete/{{id}}
- * @returns removed  article
+ * @route {DELETE} /api/v1/article/remove/{{id}}
+ * @returns
  */
 export const deleteArticle = async (req, res) => {
   const { id } = req.params;
@@ -82,7 +82,7 @@ export const deleteArticle = async (req, res) => {
 /**
  * update single
  * @auth required
- * @route {PUT} /article/update/{{id}}
+ * @route {PUT} /api/v1/article/update/{{id}}
  * @returns updated  article
  */
 export const updateArticle = async (req, res) => {
@@ -124,8 +124,8 @@ export const updateArticle = async (req, res) => {
 /**
  *  get all articles
  * @auth not required
- * @route {PUT} /article/update/{{id}}
- * @returns removed  article
+ * @route {GET} /api/v1/article
+ * @returns get all  articles
  */
 export const getAllArticles = async (req, res) => {
   const articles = await prisma.article.findMany({

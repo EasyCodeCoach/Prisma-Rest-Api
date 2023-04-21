@@ -5,7 +5,7 @@ import jwt from "jsonwebtoken";
 /**
  * create user
  * @auth required
- * @route {POST} /user/create
+ * @route {POST} /api/v1/user/register
  * @returns created user
  */
 export const registerUser = async (req, res) => {
@@ -35,7 +35,7 @@ export const registerUser = async (req, res) => {
 /**
  * login
  * @auth not required
- * @route {POST} /user/login
+ * @route {POST} /api/v1/user/login
  * @returns token
  */
 export const loginUser = async (req, res) => {
@@ -76,7 +76,7 @@ export const loginUser = async (req, res) => {
 /**
  * get single user
  * @auth required
- * @route {GET} /user/
+ * @route {GET} /api/v1/user/
  * @returns requested  user
  */
 export const getuser = async (req, res) => {
@@ -94,7 +94,7 @@ export const getuser = async (req, res) => {
 /**
  * delete single
  * @auth required
- * @route {DELETE} /user/delete/{{id}}
+ * @route {DELETE} /api/v1/user/delete/{{id}}
  * @returns removed  user
  */
 export const deleteuser = async (req, res) => {
@@ -125,7 +125,7 @@ export const deleteuser = async (req, res) => {
 /**
  * update single
  * @auth required
- * @route {PUT} /user/update/{{id}}
+ * @route {PUT} /api/v1/user/update/{{id}}
  * @returns updated  user
  */
 export const updateuser = async (req, res) => {
@@ -161,7 +161,7 @@ export const updateuser = async (req, res) => {
 /**
  *  get all users
  * @auth required
- * @route {GET} /users/{{id}}
+ * @route {GET} /api/v1/user/users/all
  * @returns all users
  */
 export const getAllusers = async (req, res) => {
