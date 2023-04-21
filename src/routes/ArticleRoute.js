@@ -6,16 +6,17 @@ import {
   updateArticle,
   getAllArticles,
 } from "../controllers/ArticleController.js";
+import { authenticateToken } from "../utils/verifyToken.js";
 
 const router = express.Router();
 
-router.route("/create").post(createArticle);
+router.route("/create").post(authenticateToken, createArticle);
 
 router.route("/:id").get(getArticle);
 
-router.route("/remove/:id").delete(deleteArticle);
+router.route("/remove/:id").delete(authenticateToken, deleteArticle);
 
-router.route("/update/:id").put(updateArticle);
+router.route("/update/:id").put(authenticateToken, updateArticle);
 
 router.route("/").get(getAllArticles);
 

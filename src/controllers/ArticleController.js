@@ -8,12 +8,17 @@ import { prisma } from "../utils/prismaClient.js";
  */
 export const createArticle = async (req, res) => {
   const article = await prisma.article.create({
+    include: {
+      author: true,
+    },
     data: {
       title: req.body.title,
       content: req.body.content,
       authorId: req.userId,
     },
   });
+
+  article.author.password = undefined;
 
   res.json({ article });
 };
@@ -61,7 +66,7 @@ export const deleteArticle = async (req, res) => {
   }
 
   // Check that the authenticated user is the author of the article
-  if (article.authorId !== req.user.id) {
+  if (article.authorId !== req.userId) {
     return res
       .status(403)
       .json({ error: "You do not have permission to delete this article" });
@@ -96,7 +101,7 @@ export const updateArticle = async (req, res) => {
   }
 
   // Check that the authenticated user is the author of the article
-  if (article.authorId !== req.user.id) {
+  if (article.authorId !== req.userId) {
     return res
       .status(403)
       .json({ error: "You do not have permission to update this article" });

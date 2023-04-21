@@ -1,5 +1,6 @@
 import { prisma } from "../utils/prismaClient.js";
 import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
 
 /**
  * create user
@@ -32,17 +33,55 @@ export const registerUser = async (req, res) => {
 };
 
 /**
+ * login
+ * @auth not required
+ * @route {POST} /user/login
+ * @returns token
+ */
+export const loginUser = async (req, res) => {
+  //    get the user from req.body
+  const { email, password } = req.body;
+  //   check if the user exists
+  const user = await prisma.user.findUnique({
+    where: { email },
+  });
+
+  if (user) {
+    // check if the password matches to the one in the db
+    const comparePassword = bcrypt.compareSync(password, user.password);
+    if (comparePassword) {
+      // sign the token
+      const payload = {
+        userId: user.id,
+      };
+      jwt.sign(
+        payload,
+        process.env.JWTSECRET,
+        {
+          expiresIn: "30d",
+        },
+        (err, token) => {
+          if (err || !token) {
+            return res.status(401).json("token was not found");
+          }
+          return res.status(200).json({
+            token: token,
+          });
+        }
+      );
+    }
+  }
+};
+
+/**
  * get single user
  * @auth required
  * @route {GET} /user/
  * @returns requested  user
  */
 export const getuser = async (req, res) => {
-  const user = await prisma.article.findUnique({
-    where: { id: parseInt(req.userId) },
-    include: {
-      author: true,
-    },
+  const user = await prisma.user.findUnique({
+    where: { id: req.userId },
   });
 
   if (!user) {
@@ -70,7 +109,7 @@ export const deleteuser = async (req, res) => {
   }
 
   // Check that the authenticated user is the same as the user being deleted
-  if (user.id !== req.user.id) {
+  if (user.id !== req.userId) {
     return res
       .status(403)
       .json({ error: "You do not have permission to delete this user" });
@@ -102,7 +141,7 @@ export const updateuser = async (req, res) => {
   }
 
   // Check that the authenticated user is the same as the user being updated
-  if (user.id !== req.user.id) {
+  if (user.id !== req.userId) {
     return res
       .status(403)
       .json({ error: "You do not have permission to update this user" });
